@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Weather</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="search">
+            <input type="text" placeholder="Enter your city" class="search_city" spellcheck="false">
+            <div class="search_btn">
+                <img class="search_img" src="images/search.png" alt="searchImg">
+            </div>
+        </div>
+        <div class="error">
+            <p class="error_text">Error in the name of the city!</p>
+        </div>
+        <div class="weather">
+            <div class="weather_main">
+                <img src="images/clouds.png" class="weather_img" alt="weather">
+                <p class="temperature">22&#176;C</p>
+                <p class="city">New York</p>
+            </div>
+            <div class="weather_information">
+                <div class="col">
+                    <img src="images/humidity.png" alt="humidity" class="humidity_img">
+                    <div class="humidity_information">
+                        <div class="humidity_percent">99%</div>
+                        <p class="humidity_text">Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="wind" class="wind_img">
+                    <div class="wind_information">
+                        <div class="wind_speed">0.78 km/h</div>
+                        <p class="wind_text">Wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        async function updateWeather(city) {
+            const apiKey = '263d9a8da66536275ed1b61e35bf479b',
+                apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&appid=263d9a8da66536275ed1b61e35bf479b&q=';
+
+            let response = await fetch(`${apiUrl}+${city}`);
+            if (response.ok) {
+                response = await response.json();
+                document.querySelector('.weather').style.display = 'block';
+                document.querySelector('.error').style.display = 'none';
+                console.log(response);
+
+                document.querySelector('.temperature').innerHTML = Math.round(response.main.temp) + `&#176;C`;
+                document.querySelector('.city').innerHTML = response.name;
+                document.querySelector('.humidity_percent').innerHTML = response.main.humidity + '%';
+                document.querySelector('.wind_speed').innerHTML = response.wind.speed.toFixed(1) + ' km/h';
+                document.querySelector('.weather_img').setAttribute('src', `images/${response.weather[0].main}.png`);
+            }
+            else {
+                document.querySelector('.error').style.display = 'block';
+                document.querySelector('.weather').style.display = 'none';
+            }
+        }
+
+        const cityBox = document.querySelector('.search_city'),
+            cityBtn = document.querySelector('.search_btn');
+
+        cityBtn.addEventListener('click', () => {
+            updateWeather(cityBox.value)
+        })
+    </script>
+</body>
+
+</html>
