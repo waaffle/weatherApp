@@ -1,2 +1,1 @@
-
 mini-project on js
